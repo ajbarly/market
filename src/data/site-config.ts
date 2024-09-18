@@ -26,14 +26,14 @@ export type Market = {
 export type Store = {
     title?: string;
     text?: string;
-    cover: string;
+    cover?: Image;
     avatar: string;
 };
 
 export type Product = {
     title?: string;
     text?: string;
-    cover: string;
+    preview?: Image;
 };
 
 export type Error = {
@@ -110,14 +110,20 @@ const siteConfig: SiteConfig = {
     store: {
         title: 'المتجر غير متاح',
         text: 'عذرًا، يبدو أن المتجر الذي تحاول الوصول إليه غير موجود أو تم حذفه. يرجى العودة إلى التطبيق والبحث عن ما تريده هناك.',
-        cover: "/broken_store.jpg",
-        avatar: "/broken_product.jpg",
+        cover: {
+            src: "/broken_store.jpg",
+            alt: 'Store cover not available'
+        },
+        avatar: "/broken_avatar.png",
     },
 
     product: {
         title: 'المنتج غير متاح',
         text: "عذرًا، يبدو أن المنتج الذي تبحث عنه غير متوفر حاليًا أو تم حذفه من المتجر. يرجى التحقق لاحقًا أو التواصل معنا إذا كنت ترى أنه يوجد خطأ ما.",
-        cover: "/broken_product.jpg",
+        preview: {
+            src: "/broken_product.jpg",
+            alt: 'Porduct preview not available'
+        },
     },
 
     error: {
