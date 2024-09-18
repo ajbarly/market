@@ -60,7 +60,7 @@ export type SiteConfig = {
 const siteConfig: SiteConfig = {
     logo: {
         src: '/logo.png',
-        alt: 'Ovidius logo'
+        alt: 'Ajbarly market logo'
     },
     title: 'سوق أجبرلي',
     description: 'Astro.js and Tailwind CSS theme for blogging by justgoodui.com',
