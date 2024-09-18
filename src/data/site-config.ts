@@ -13,9 +13,6 @@ export type SocialLink = Link & {
 };
 
 export type Hero = {
-    title?: string;
-    text?: string;
-    avatar?: Image;
     backgroundImage?: Image;
 };
 
@@ -99,12 +96,6 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        title: 'السوق',
-        text: "",
-        avatar: {
-            src: '/store.png',
-            alt: 'Ajbarly market logo'
-        },
         backgroundImage: {
             src: '/hero.svg'
         }
