@@ -2,6 +2,7 @@
 import NoHeaderLayout from '../../layouts/NoHeaderLayout.astro';
 import Header from '../../components/Header.astro';
 import Hero from '../../components/Hero.astro';
+
 import siteConfig from '../../data/site-config';
 import Subscribe from '../../components/Market.astro';
 import { appwriteException, getDocument, getProductImageUrl } from '../../data/services';
@@ -15,10 +16,11 @@ if (id === '') {
 }
 
 let metaTitle = siteConfig.product?.title;
+let productDetails = siteConfig.product?.text;
+let productPreview = siteConfig.product?.preview;
 let productName = '';
 let productPrice = '',
     beforeDiscount = '';
-let productDetails = siteConfig.product?.text;
 const redirectUrl =
     'intent://product?id=' +
     id +
@@ -29,15 +31,15 @@ try {
     const result = await getDocument(false, id);
     productName = result.product_name;
     productDetails = result.product_details;
-    var productPreview = result.product_imgs || '';
+    productPreview = { src: result.product_imgs[0] || '', alt: productName };
     const price = result.product_price;
     const discount = result.product_dicount_price;
 
     metaTitle = productName;
-    if (productPreview !== '') {
-        productPreview = getProductImageUrl(productPreview[0]);
+    if (productPreview.src !== '') {
+        productPreview.src = getProductImageUrl(productPreview.src);
     } else {
-        productPreview = siteConfig.market?.coverUrl;
+        productPreview.src = siteConfig.store?.avatar!;
     }
 
     const suffix = ' MRU';
@@ -54,12 +56,12 @@ try {
             errorInstance = new CustomError(505, siteConfig.error?.title!, siteConfig.error?.text!);
         }
         errorInstance = new CustomError(404, metaTitle!, productDetails!);
-        productPreview = siteConfig.product?.cover;
+        productPreview = siteConfig.product?.preview;
     }
 }
 ---
 
-<NoHeaderLayout title={metaTitle} description={productDetails} image={siteConfig.image}>
+<NoHeaderLayout title={metaTitle} description={productDetails} image={productPreview}>
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
@@ -88,8 +90,8 @@ try {
                                 <div class="order-1 lg:order-2">
                                     <img
                                         class="h-80 w-80 object-cover lg:w-[500px] lg:h-[500px]"
-                                        src={productPreview}
-                                        alt={productName}
+                                        src={productPreview?.src}
+                                        alt={productPreview?.alt}
                                         onerror="this.src='/broken_avatar.png'"
                                     />
                                 </div>

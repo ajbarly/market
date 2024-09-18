@@ -2,7 +2,7 @@
 import NoHeaderLayout from '../../layouts/NoHeaderLayout.astro';
 import Header from '../../components/Header.astro';
 import Hero from '../../components/Hero.astro';
-import siteConfig from '../../data/site-config';
+import siteConfig, { type Image } from '../../data/site-config';
 import Subscribe from '../../components/Market.astro';
 import { appwriteException, getDocument, getName, getStoreImageUrl } from '../../data/services';
 import { isOpen } from '../../utils/store_available';
@@ -20,6 +20,7 @@ let metaTitle = siteConfig.store?.title;
 let storeName = '',
     categoryName = '';
 let aboutStore = siteConfig.store?.text;
+let storeCover = siteConfig.store?.cover;
 let storeAvatar = '';
 let counter = '';
 let availability = '';
@@ -37,14 +38,14 @@ try {
     aboutStore = result.store_about;
     storeAvatar = getStoreImageUrl(result.store_avatar);
     availability = isOpen(result.store_opens, result.store_closes);
-    var storeCover = result.store_cover || '';
+    storeCover = { src: result.store_cover || '', alt: storeName };
 
     metaTitle = storeName;
     counter = result.store_product_counter;
-    if (storeCover !== '') {
-        storeCover = getStoreImageUrl(storeCover);
+    if (storeCover.src !== '') {
+        storeCover.src = getStoreImageUrl(storeCover.src);
     } else {
-        storeCover = siteConfig.market?.coverUrl;
+        storeCover.src = siteConfig.market?.coverUrl!;
     }
 } catch (error: any) {
     hasError = true;
@@ -71,7 +72,7 @@ try {
                         <div class="mt-7 flex flex-wrap items-center justify-center">
                             <div class="container lg:w-2/6 xl:w-2/7 sm:w-full md:w-2/3 bg-white transform duration-200 easy-in-out">
                                 <div class="h-52 overflow-hidden">
-                                    <img class="w-full" src={storeCover} alt="Store cover" onerror="this.src='/broken_store.jpg'" />
+                                    <img class="w-full" src={storeCover?.src} alt={storeCover?.alt} onerror="this.src='/broken_store.jpg'" />
                                 </div>
                                 <div class="flex justify-center px-5 -mt-12">
                                     <img
