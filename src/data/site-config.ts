@@ -63,7 +63,7 @@ const siteConfig: SiteConfig = {
         alt: 'Ajbarly market logo'
     },
     title: 'سوق أجبرلي',
-    description: 'Astro.js and Tailwind CSS theme for blogging by justgoodui.com',
+    description: 'اكتشف عالمًا جديدًا من الفرص التجارية مع تطبيق \"أجبرلي\"، حيث يتقاطع الابتكار مع احتياجاتك. هنا، تتاح لك مساحة غير محدودة للتواصل مع جمهورك المستهدف...',
     image: {
         src: '/ovidius-preview.jpg',
         alt: 'Ovidius - Astro.js and Tailwind CSS theme'
