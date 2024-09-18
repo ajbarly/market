@@ -65,8 +65,8 @@ const siteConfig: SiteConfig = {
     title: 'سوق أجبرلي',
     description: 'اكتشف عالمًا جديدًا من الفرص التجارية مع تطبيق \"أجبرلي\"، حيث يتقاطع الابتكار مع احتياجاتك. هنا، تتاح لك مساحة غير محدودة للتواصل مع جمهورك المستهدف...',
     image: {
-        src: '/ovidius-preview.jpg',
-        alt: 'Ovidius - Astro.js and Tailwind CSS theme'
+        src: '/market_preview.jpg',
+        alt: 'Ajbarly marekt preview'
     },
     secondaryNavLinks: [
         {
