@@ -1,0 +1,27 @@
+{
+    "name": "ovidius-astro-theme",
+    "type": "module",
+    "version": "0.0.2",
+    "scripts": {
+        "dev": "astro dev",
+        "start": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/mdx": "^3.1.5",
+        "@astrojs/netlify": "^5.5.3",
+        "@astrojs/rss": "^4.0.7",
+        "@astrojs/sitemap": "^3.1.6",
+        "@astrojs/tailwind": "^5.1.0",
+        "appwrite": "^14.0.1",
+        "astro": "^4.15.3",
+        "tailwindcss": "^3.4.10"
+    },
+    "devDependencies": {
+        "@tailwindcss/typography": "^0.5.15",
+        "prettier": "^3.3.3",
+        "prettier-plugin-tailwindcss": "^0.6.6"
+    }
+}

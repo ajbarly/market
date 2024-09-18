@@ -1,0 +1,19 @@
+---
+import siteConfig from '../data/site-config.ts';
+
+const { class: className } = Astro.props;
+---
+
+<header class:list={['px-4 py-4 flex gap-6 items-center justify-start sm:px-8 sm:py-6', className]}>
+    {
+        siteConfig.logo && siteConfig.logo?.src ? (
+            <a href="/">
+                <img class="max-h-12" src={siteConfig.logo.src} alt={siteConfig.logo.alt || ''} />
+            </a>
+        ) : (
+            <a class="text-xl font-bold sm:text-2xl" href="/">
+                {siteConfig.title}
+            </a>
+        )
+    }
+</header>

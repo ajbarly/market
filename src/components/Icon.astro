@@ -1,0 +1,19 @@
+---
+import ArrowLeft from '../icons/ArrowLeft.astro';
+import ArrowRight from '../icons/ArrowRight.astro';
+import Facebook from '../icons/Facebook.astro';
+import Whatsapp from '../icons/Whatsapp.astro';
+
+const iconMap: { [key: string]: any } = {
+    'arrow-left': ArrowLeft,
+    'arrow-right': ArrowRight,
+    facebook: Facebook,
+    whatsapp: Whatsapp
+};
+
+const { icon, class: className } = Astro.props;
+
+const IconComponent = icon ? iconMap[icon] : null;
+---
+
+{IconComponent && <IconComponent class={className} />}
