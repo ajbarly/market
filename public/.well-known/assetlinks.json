@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.ajbarly",
+      "sha256_cert_fingerprints": [
+        "81:73:8E:52:07:76:22:98:0A:1D:5F:A6:0E:05:F9:C5:DE:4B:61:87:F5:D2:91:92:41:2B:D0:3F:B3:12:8E:94",
+        "B2:D2:60:79:BB:99:8E:0E:A6:8F:AB:B8:26:AE:77:6D:CD:4A:09:42:C8:BD:62:D9:BC:32:1F:33:80:7D:72:B6"
+      ]
+    }
+  }
+]
