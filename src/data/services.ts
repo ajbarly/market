@@ -10,6 +10,7 @@ const storeBucket = "63624f6c1410a29c4a1e";
 const productBucket = "6363caee8ce6acba81f4";
 const databaseId: string = '63415eb80bd55301d02d';
 const storeCollectionId: string = '63415ed621624e6143f4';
+const orderCollectionId: string = '676d61c0001b43b9993f';
 const productCollectionId: string = '636275b09a7821f7f491';
 
 client
