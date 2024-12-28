@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import ajbarlyLogo from '../assets/ajbarly_logo.png';
+import type { Product } from '../data/models';
+interface Props {
+    product: Product;
+}
+
+const { product } = Astro.props;
+---
+
+<section class="relative min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+    <div id="loader" class="absolute bg-white bg-opacity-40 z-10 h-full w-full flex items-center justify-center" style="display: none;">
+        <div class="relative flex justify-center items-center">
+            <div class="absolute animate-spin rounded-full h-32 w-32 border-t-8 border-b-8 border-primary"></div>
+            <Image src={ajbarlyLogo} alt="" class="rounded-full h-20 w-20" />
+        </div>
+    </div>
+    <!-- Alert Success -->
+    <div id="success" class="fixed bottom-4 right-4 bg-green-200 px-6 py-4 my-4 rounded-md text-lg flex items-center mx-auto max-w-lg" style="display: none;">
+        <svg viewBox="0 0 24 24" class="text-green-600 w-5 h-5 sm:w-5 sm:h-5 ml-3">
+            <path
+                fill="currentColor"
+                d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+            >
+            </path>
+        </svg>
+        <span class="text-green-800">تم الإرسال طلبكم بنجاح.</span>
+    </div>
+    <!-- End Alert Success -->
+
+    <!-- Alert Error -->
+    <div id="error" class="fixed bottom-4 right-4 bg-red-200 px-6 py-4 my-4 rounded-md text-lg flex items-center mx-auto max-w-lg" style="display: none;">
+        <svg viewBox="0 0 24 24" class="text-red-600 w-5 h-5 sm:w-5 sm:h-5 ml-3">
+            <path
+                fill="currentColor"
+                d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"
+            >
+            </path>
+        </svg>
+        <span class="text-red-800">تعذر الإرسال, أعد المحالة لاحقا.</span>
+    </div>
+    <!-- End Alert Error -->
+
+    <div class="container max-w-screen-lg mx-auto">
+        <div>
+            <h2 id="order" class="font-semibold text-3xl text-gray-600">طلب المنتج</h2>
+            <p class="text-xl text-gray-500 mb-6">أدخل معلوماتك لإتمام طلبك وسيتواصل معك مديروا المتجر.</p>
+
+            <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                    <!-- <div class="flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h2 class="text-4xl font-bold leading-tight lg:text-5xl">{product.storeName}</h2>
+                            <div class="text-gray-600 text-base">يرجى ملء النموذج أدناه لإكمال طلبك من متجرنا</div>
+                        </div>
+                        <img src="assets/svg/doodle.svg" alt="" class="p-6 h-52 md:h-64" />
+
+                        <img src={product.storeLogo} alt={product.storeName} class="p-6 h-auto rounded-3xl" />
+                    </div> -->
+                    <div class="flex flex-col items-center gap-4">
+                        <img src={product.storeLogo} alt={product.storeName} class="relative object-cover shrink-0 h-52 w-52 z-10 rounded-full" />
+
+                        <p class="text-3xl font-bold text-gray-500 leading-tight lg:text-4xl">{product.storeName}</p>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <form method="POST" id="form">
+                            <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                                <input type="text" name="productId" value={product.id} class="hidden" />
+                                <input type="text" name="storeId" value={product.storeId} class="hidden" />
+                                <div class="md:col-span-5 text-base">
+                                    <label for="name">إسمك الكامل</label>
+                                    <input type="text" name="name" id="name" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" required />
+                                </div>
+
+                                <div class="md:col-span-5 text-base">
+                                    <label for="phone">رقم رهاتفك</label>
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        id="phone"
+                                        class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                        value=""
+                                        placeholder="222+"
+                                        onkeypress="return /[0-9]/i.test(event.key)"
+                                        minlength="8"
+                                        maxlength="8"
+                                        required
+                                    />
+                                </div>
+                                <div class="md:col-span-5 text-base">
+                                    <div class="inline-flex items-center justify-center">
+                                        <input type="checkbox" name="isWhatsApp" id="isWhatsApp" class="w-4 h-4 accent-primary" />
+                                        <label for="isWhatsApp" class="mt-1 mr-2">الرقم متوفر على حساب</label>
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-5 text-base">
+                                    <label for="address">العنوان</label>
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        id="address"
+                                        class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                        value=""
+                                        placeholder=""
+                                    />
+                                </div>
+
+                                <div class="md:col-span-5 text-base">
+                                    <label for="quantity">حدد الكمية</label>
+
+                                    <div class="flex justify-between items-center mb-3">
+                                        <div class="inline-flex items-center self-start">
+                                            <button type="button" onclick="minus()" class="bg-primary p-1.5 font-bold rounded">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#fff">
+                                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+
+                                            <input
+                                                name="quantity"
+                                                id="quantity"
+                                                type="text"
+                                                value="1"
+                                                onkeypress="return /[0-9]/i.test(event.key)"
+                                                class="max-w-[100px] font-bold font-mono py-1.5 px-2 mx-1.5
+                                      block border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                                      focus:outline-none
+                                      focus:border-sky-500
+                                      focus:ring-1
+                                      focus:ring-sky-500
+                                      focus:invalid:border-red-500 focus:invalid:ring-red-500"
+                                            />
+
+                                            <button type="button" onclick="plus()" class="bg-primary p-1.5 font-bold rounded">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#fff">
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <div class="flex">
+                                            <button
+                                                id="submit"
+                                                class="bg-primary flex gap-2 items-center text-base text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                >اضغط لتقديم الطلب</button
+                                            >
+                                            <!-- <span id="login_default_state"
+                                                ><span class="text-xl font-bold text-gray-900 ml-2" id="subtotal"></span>أوقية جديدة</span
+                                            > -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="md:col-span-5 text-left">
+                                    <div class="inline-flex items-end">
+                                        <button
+                                            id="submit"
+                                            class="bg-primary flex gap-2 items-center text-base text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            >اضغط لتقديم الطلب</button
+                                        >
+                                    </div>
+                                </div> -->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                document.getElementById('quantity').readOnly = true;
+                let current_count = parseInt(document.getElementById('quantity').value);
+                // let subtotal = parseInt(7);
+
+                function plus() {
+                    document.getElementById('quantity').value = ++current_count;
+                    // document.getElementById('subtotal').innerHTML = ` ${subtotal * document.getElementById('quantity').value}`;
+                }
+
+                function minus() {
+                    if (current_count < 2) {
+                        current_count = 1;
+                        document.getElementById('quantity').value = 1;
+                        // document.getElementById('subtotal').innerHTML = ` ${subtotal * document.getElementById('quantity').value}`;
+                    } else {
+                        document.getElementById('quantity').value = --current_count;
+                        // document.getElementById('subtotal').innerHTML = ` ${subtotal * document.getElementById('quantity').value}`;
+                    }
+                }
+            </script>
+
+            <script>
+                import { actions } from 'astro:actions';
+                import { navigate } from 'astro:transitions/client';
+
+                const form = document.getElementById('form') as HTMLFormElement;
+                const loader = document.getElementById('loader') as HTMLFormElement;
+                const success = document.getElementById('success') as HTMLFormElement;
+                const errorSnack = document.getElementById('error') as HTMLFormElement;
+
+                async function handleFormSubmit(event: Event) {
+                    event.preventDefault();
+                    loader.style.display = 'flex';
+
+                    const formData = new FormData(form);
+                    const phone = Number(formData.get('phone'));
+                    const quantity = Number(formData.get('quantity'));
+                    const isWhatsAppValue = formData.get('isWhatsApp');
+                    const isWhatsApp = isWhatsAppValue === 'on';
+
+                    const { data, error } = await actions.order({
+                        product: formData.get('productId') as string,
+                        storeId: formData.get('storeId') as string,
+                        name: formData.get('name') as string,
+                        phone: phone,
+                        isWhatsApp: isWhatsApp,
+                        address: formData.get('address') as string,
+                        quantity: quantity
+                    });
+                    if (error) {
+                        loader.style.display = 'none';
+                        errorSnack.style.display = 'flex';
+
+                        setTimeout(() => {
+                            errorSnack.style.display = 'none';
+                        }, 2000);
+                    } else {
+                        loader.style.display = 'none';
+                        success.style.display = 'flex';
+
+                        setTimeout(() => {
+                            navigate('/');
+                        }, 2000);
+                    }
+                }
+                form.addEventListener('submit', handleFormSubmit);
+            </script>
+        </div>
+    </div>
+</section>
