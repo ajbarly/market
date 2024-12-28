@@ -1,4 +1,4 @@
-import { Client, Databases, Storage, AppwriteException, type Models } from 'appwrite';
+import { Client, Databases, Storage, AppwriteException, type Models, ID } from 'appwrite';
 
 export const client = new Client();
 export const database = new Databases(client);
@@ -19,6 +19,10 @@ client
 
 export async function getDocument(isStore: boolean, id: string): Promise<Models.Document> {
     return await database.getDocument(databaseId, isStore ? storeCollectionId : productCollectionId, id);
+}
+
+export async function createOrder(data: {}): Promise<Models.Document> {
+    return await database.createDocument(databaseId, orderCollectionId, ID.unique(), data);
 }
 
 const result = storage.getFilePreview(
