@@ -1,0 +1,24 @@
+---
+import '../styles/lightbox.min.css';
+
+const { images = [] } = Astro.props;
+---
+
+<!-- Gallery -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mx-4 bg-gray-300 rounded-lg">
+    <!-- Image -->
+    {
+        images.map((image: string) => (
+            <div class="group cursor-pointer relative">
+                <a href={image} data-lightbox="example-set" data-title="Découvrez plus avec Ajbarly application">
+                    <img src={image} alt="Image 1" class="w-full h-48 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105" />
+                </a>
+                {/* <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity -z-0">
+                    <span class="bg-white text-primary px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">معاينة</span>
+                </div> */}
+            </div>
+        ))
+    }
+</div>
+
+<script type="text/javascript" src="/src/js/lightbox-plus-jquery.min.js"></script>
