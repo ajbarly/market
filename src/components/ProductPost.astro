@@ -1,0 +1,143 @@
+---
+import type { Product } from '../data/models';
+import AvailableIcon from '../icons/AvailableIcon.astro';
+import UnavailableIcon from '../icons/UnavailableIcon.astro';
+
+interface Props {
+    product: Product;
+}
+const { product } = Astro.props;
+
+let productPrice = '',
+    beforeDiscount = '';
+
+const suffix = ' MRU';
+if (product.discount > 1) {
+    productPrice = product.discount + suffix;
+    beforeDiscount = product.price + suffix;
+} else {
+    if (product.price === null) {
+        productPrice = '';
+    } else {
+        productPrice = product.price + suffix;
+    }
+}
+
+const redirectUrl = 'intent://market.ajbarly.app/product/' + product.id + '/#Intent;scheme=https;package=app.ajbarly;end';
+---
+
+<div class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap -mx-4">
+            <!-- Product Images -->
+            <div class="w-full md:w-1/2 px-4 mb-8">
+                <img src={product.images[0]} alt="Product sample" class="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage" />
+            </div>
+
+            <!-- Product Details -->
+            <div class="w-full md:w-1/2 px-4">
+                <h2 class="text-3xl font-bold mb-2">{product.name}</h2>
+                <p class="text-gray-600 mb-4">{product.storeName}</p>
+
+                <div class="flex flex-row justify-between mb-4">
+                    <div class="flex gap-2" dir="ltr">
+                        <span class="text-gray-500 line-through decoration-red-500">{beforeDiscount}</span>
+                        <span class="text-2xl font-bold">{productPrice}</span>
+                    </div>
+                    {
+                        product.state === 'new' ? (
+                            <div class="inline-flex items-center rounded bg-green-500 px-6 py-2 font-semibold text-white transition [box-shadow:rgb(34,_197,94,.2)-8px_8px] hover:[box-shadow:rgb(171,_196,_245)0px_0px]">
+                                جديد
+                            </div>
+                        ) : product.state === 'used' ? (
+                            <div class="inline-flex items-center rounded bg-red-500 px-6 py-3 font-semibold text-white transition [box-shadow:rgb(220,38,38,.2)-8px_8px] hover:[box-shadow:rgb(171,_196,_245)0px_0px]">
+                                مستعمل
+                            </div>
+                        ) : (
+                            <div />
+                        )
+                    }
+                </div>
+                <!-- Details -->
+                <p class="text-gray-700 mb-6 whitespace-pre-wrap">
+                    {product.details}
+                </p>
+                <div class="mb-6">
+                    <div class="relative bg-white p-4 mx-auto w-full max-w-2xl rounded-2xl border-dashed border-2 border-gray-500">
+                        <div class="mx-auto flex w-full max-w-md flex-row justify-around">
+                            <a class="flex flex-col items-center space-y-2">
+                                {product.deliverable ? <AvailableIcon /> : <UnavailableIcon />}
+
+                                <span class="text-slate-400 font-medium">قابل لتوصيل</span>
+                            </a>
+                            <a class="flex flex-col items-center space-y-2">
+                                {product.deliverable ? <AvailableIcon /> : <UnavailableIcon />}
+
+                                <span class="text-slate-400 font-medium">قابل لتفاوض</span>
+                            </a>
+                            <a class="flex flex-col items-center space-y-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="48" width="48">
+                                    <path
+                                        fill="#74c0fc"
+                                        d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
+                                    ></path></svg
+                                >
+                                <span class="text-slate-400 font-medium">{product.views}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4 mb-6">
+                    <a
+                        href={product.orderable ? '#order' : redirectUrl}
+                        class="w-full group relative cursor-pointer overflow-hidden whitespace-nowrap mt-4 px-6 py-4 text-white [background:var(--bg)] [border-radius:var(--radius)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(62,61,117,0.7)] flex justify-center items-center space-x-2"
+                        style="--spread: 90deg; --shimmer-color: #ffffff; --radius: 100px; --speed: 1.5s; --cut: 0.1em; --bg: radial-gradient(circle at 50% 50%, #ff7e5f, #feb47b);"
+                    >
+                        <div class="absolute inset-0 overflow-hidden">
+                            <div class="absolute inset-[-100%] rotate-gradient">
+                                <div
+                                    class="absolute inset-0 [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,hsl(0_0%_100%/1)_var(--spread),transparent_var(--spread))]"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute [background:var(--bg)] [border-radius:var(--radius)] [inset:var(--cut)]"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="24" width="24" class="z-10 animate-bounce">
+                            <path
+                                fill="#FFD43B"
+                                d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"
+                            ></path></svg
+                        >
+
+                        <span
+                            class="z-10 w-48 whitespace-pre bg-gradient-to-b from-black from-30% to-gray-300/80 bg-clip-text text-center text-lg font-semibold leading-none tracking-tight text-white animate-pulse"
+                            >تسوق الآن</span
+                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="24" width="24" class="z-10 animate-bounce">
+                            <path
+                                fill="#FFD43B"
+                                d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"
+                            ></path></svg
+                        >
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .rotate-gradient {
+        animation: spin 4s linear infinite;
+        animation-timing-function: linear; /* Ensure constant speed */
+    }
+</style>
