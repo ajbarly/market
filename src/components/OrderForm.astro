@@ -111,8 +111,8 @@ const { product } = Astro.props;
                                 <div class="md:col-span-5 text-base">
                                     <label for="quantity">حدد الكمية</label>
 
-                                    <div class="flex justify-between items-center mb-3">
-                                        <div class="inline-flex items-center self-start">
+                                    <div class="flex flex-col md:flex-row justify-between items-center mb-3">
+                                        <div class="inline-flex items-center self-start mb-3 md:mb-0">
                                             <button type="button" onclick="minus()" class="bg-primary p-1.5 font-bold rounded">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="#fff">
                                                     <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -126,12 +126,12 @@ const { product } = Astro.props;
                                                 value="1"
                                                 onkeypress="return /[0-9]/i.test(event.key)"
                                                 class="max-w-[100px] font-bold font-mono py-1.5 px-2 mx-1.5
-                                      block border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-                                      focus:outline-none
-                                      focus:border-sky-500
-                                      focus:ring-1
-                                      focus:ring-sky-500
-                                      focus:invalid:border-red-500 focus:invalid:ring-red-500"
+                                            block border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                                            focus:outline-none
+                                            focus:border-sky-500
+                                            focus:ring-1
+                                            focus:ring-sky-500
+                                            focus:invalid:border-red-500 focus:invalid:ring-red-500"
                                             />
 
                                             <button type="button" onclick="plus()" class="bg-primary p-1.5 font-bold rounded">
@@ -144,15 +144,12 @@ const { product } = Astro.props;
                                             </button>
                                         </div>
 
-                                        <div class="flex">
+                                        <div class="flex w-full mt-4 md:w-auto md:mt-0">
                                             <button
                                                 id="submit"
-                                                class="bg-primary flex gap-2 items-center text-base text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                class="bg-primary items-center text-base text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 w-full"
                                                 >اضغط لتقديم الطلب</button
                                             >
-                                            <!-- <span id="login_default_state"
-                                                ><span class="text-xl font-bold text-gray-900 ml-2" id="subtotal"></span>أوقية جديدة</span
-                                            > -->
                                         </div>
                                     </div>
                                 </div>
@@ -172,7 +169,7 @@ const { product } = Astro.props;
                 </div>
             </div>
 
-            <script type="text/javascript">
+            <script is:inline>
                 document.getElementById('quantity').readOnly = true;
                 let current_count = parseInt(document.getElementById('quantity').value);
                 // let subtotal = parseInt(7);
