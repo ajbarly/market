@@ -63,7 +63,7 @@ try {
             </main>
             <Hero />
             {
-                hasError ? <div></div>:
+                hasError || !productModel.orderable ? <div></div>:
                 <OrderForm product={productModel} />
             }
         </div>
