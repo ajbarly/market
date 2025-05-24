@@ -60,26 +60,26 @@ export type SiteConfig = {
 const siteConfig: SiteConfig = {
     logo: {
         src: '/logo.png',
-        alt: 'Ajbarly market logo'
+        alt: 'Ajbarly web logo'
     },
-    title: 'سوق أجبرلي',
+    title: 'أجبرلي ويب',
     description: 'اكتشف عالمًا جديدًا من الفرص التجارية مع تطبيق \"أجبرلي\"، حيث يتقاطع الابتكار مع احتياجاتك. هنا، تتاح لك مساحة غير محدودة للتواصل مع جمهورك المستهدف...',
     image: {
         src: '/market_preview.jpg',
-        alt: 'Ajbarly marekt preview'
+        alt: 'Ajbarly web preview'
     },
     secondaryNavLinks: [
         {
             text: 'حول أجبرلي',
-            href: 'https://ajbarly.app/about'
+            href: 'https://ajbarly.com/about'
         },
         {
             text: 'سياسة الخصوصية',
-            href: 'https://ajbarly.app/privacy'
+            href: 'https://ajbarly.com/privacy'
         },
         {
             text: 'مركز المساعدة',
-            href: 'https://ajbarly.app/faq'
+            href: 'https://ajbarly.com/faq'
         },
 
     ],
@@ -104,7 +104,7 @@ const siteConfig: SiteConfig = {
         title: 'السوق',
         text: "اكتشف عالمًا جديدًا من الفرص التجارية مع تطبيق \"أجبرلي\"، حيث يتقاطع الابتكار مع احتياجاتك. هنا، تتاح لك مساحة غير محدودة للتواصل مع جمهورك المستهدف، وتوسيع نطاق أعمالك بطريقة لم تعهدها من قبل. هل أنت مستعد لمعرفة المزيد عن هذا السوق المتطور وكيف يمكن أن يكون جزءًا من نجاحك؟",
         coverUrl: "/anouncement.jpg",
-        formUrl: 'https://ajbarly.app/market'
+        formUrl: 'https://ajbarly.com/market'
     },
 
     store: {
