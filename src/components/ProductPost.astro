@@ -59,7 +59,7 @@ const stockStatusMap = {
 const stockStatus = product.stock && product.stock in stockStatusMap ? stockStatusMap[product.stock as StockStatus] : { label: 'غير معروف', color: 'gray' };
 
 // Generate deep link
-const redirectUrl = 'intent://market.ajbarly.app/product/' + product.id + '/#Intent;scheme=https;package=app.ajbarly;end';
+const redirectUrl = 'intent://ajbarly.app/market/product/' + product.id + '/#Intent;scheme=https;package=app.ajbarly;end';
 
 // Calculate safe satisfaction percentage
 const satisfactionPercentage =
