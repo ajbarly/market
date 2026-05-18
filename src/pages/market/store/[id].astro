@@ -1,20 +1,33 @@
 ---
+// src/pages/market/store/[id].astro
 import NoHeaderLayout from '../../../layouts/NoHeaderLayout.astro';
 import Header from '../../../components/Header.astro';
 import Hero from '../../../components/Hero.astro';
 import siteConfig from '../../../data/site-config';
 import Subscribe from '../../../components/Market.astro';
-import { appwriteException, getDocument, getName, getStoreImageUrl } from '../../../data/services';
+import { appwriteException, getRow, getName, getStoreImageUrl } from '../../../data/services';
 import { isOpen } from '../../../utils/store_available';
 import { getCategoryName } from '../../../utils/store_category';
 import ErrorMessage from '../../../components/ErrorMessage.astro';
 import { CustomError } from '../../../utils/custom_error';
+import { isBot, getAppStoreUrl } from '../../../utils/bot-detection';
 
 const { id } = Astro.params || '';
 
 if (id === '') {
     return Astro.redirect('/');
 }
+
+// ─── Bot detection ────────────────────────────────────────────────────────────
+// Link-preview crawlers (WhatsApp, Telegram, Facebook …) are allowed through
+// so they can read the OG meta tags and render a rich preview card.
+// Real users who click the link (and don't have the app) are sent straight
+// to the appropriate app store.
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+if (!isBot(userAgent)) {
+    return Astro.redirect(getAppStoreUrl(userAgent), 302);
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 let metaTitle = siteConfig.store?.title;
 let storeName = '',
@@ -27,8 +40,9 @@ let availability = '';
 const redirectUrl = 'intent://ajbarly.app/market/store/' + id + '/#Intent;scheme=https;package=app.ajbarly;end';
 let hasError: boolean = false;
 let errorInstance: CustomError = new CustomError(0, '', '');
+
 try {
-    const result = await getDocument(true, id!);
+    const result = await getRow(true, id!);
 
     storeName = getName(`${result.store_name}`);
     categoryName = getCategoryName(result.store_type);
