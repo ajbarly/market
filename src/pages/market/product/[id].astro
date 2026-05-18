@@ -58,7 +58,7 @@ const shouldClientRedirect = !isBot(userAgent);
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
-            {shouldClientRedirect && <script is:inline>{`window.location.replace(${JSON.stringify(appStoreUrl)});`}</script>}
+            <!-- {shouldClientRedirect && <script is:inline>{`window.location.replace(${JSON.stringify(appStoreUrl)});`}</script>} -->
             <!-- <main>
                 {
                     hasError ? (
@@ -76,7 +76,7 @@ const shouldClientRedirect = !isBot(userAgent);
             <!-- {!hasError && productModel.orderable && <OrderForm product={productModel} />} -->
         </div>
         <section class="grow py-12 sm:py-16">
-            <Subscribe class="px-4 my-12 sm:px-8 sm:my-16" />
+            <!-- <Subscribe class="px-4 my-12 sm:px-8 sm:my-16" /> -->
         </section>
     </div>
 </NoHeaderLayout>
