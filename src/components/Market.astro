@@ -1,0 +1,18 @@
+---
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`${className} rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center shadow-sm`}>
+    <div class="mx-auto max-w-3xl">
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Market</p>
+        <h2 class="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">اكتشف السوق المحلي</h2>
+        <p class="mt-4 text-base leading-7 text-slate-600">تابع العروض والخدمات المتاحة في متجرك عبر التطبيق، وحصل على أحدث العروض في مكان واحد.</p>
+        <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <a
+                href="#"
+                class="inline-flex items-center justify-center rounded-full bg-slate-900 px-7 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >تصفّح الأن</a
+            >
+        </div>
+    </div>
+</div>

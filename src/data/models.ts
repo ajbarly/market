@@ -57,19 +57,18 @@ export function setProduct(result: Models.Row): Product {
     };
 }
 
-    //     refund: result.refund ?? null,
-    //     negotiable: result.product_negotiable,
-    //     deliverable: result.product_deliverable ?? false,
-    //     orderable: result.orderable ?? false,
-    //     warranty: result.warranty ?? null,
-    //     details: result.product_details,
-    //     price: result.product_price ?? null,
-    //     discount: result.product_dicount_price ?? null,
-    //     views: result.views ?? 0,
-    //     satisfied: result.satisfied ?? 0,
-    //     unsatisfied: result.unsatisfied ?? 0,
-    //     images: result.product_imgs.map((img: any) => getProductImageUrl(img)),
-    //     hasVideo: result.has_video ?? false,
-    //     thumbnail: getProductImageUrl(result.thumbnail),
-    // };
-}
+//     refund: result.refund ?? null,
+//     negotiable: result.product_negotiable,
+//     deliverable: result.product_deliverable ?? false,
+//     orderable: result.orderable ?? false,
+//     warranty: result.warranty ?? null,
+//     details: result.product_details,
+//     price: result.product_price ?? null,
+//     discount: result.product_dicount_price ?? null,
+//     views: result.views ?? 0,
+//     satisfied: result.satisfied ?? 0,
+//     unsatisfied: result.unsatisfied ?? 0,
+//     images: result.product_imgs.map((img: any) => getProductImageUrl(img)),
+//     hasVideo: result.has_video ?? false,
+//     thumbnail: getProductImageUrl(result.thumbnail),
+// };

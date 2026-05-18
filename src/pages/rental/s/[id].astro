@@ -1,14 +1,14 @@
 ---
 // src/pages/market/rental/s/[id].astro
-import NoHeaderLayout from '../../../../layouts/NoHeaderLayout.astro';
-import Header from '../../../../components/Header.astro';
-import Hero from '../../../../components/Hero.astro';
-import siteConfig from '../../../../data/site-config';
-import Subscribe from '../../../../components/Market.astro';
-import { appwriteException, getRentalService, getRentalImageUrl, getName } from '../../../../data/services';
-import ErrorMessage from '../../../../components/ErrorMessage.astro';
-import { CustomError } from '../../../../utils/custom_error';
-import { isBot, getAppStoreUrl } from '../../../../utils/bot-detection';
+import NoHeaderLayout from '../../../layouts/NoHeaderLayout.astro';
+import Header from '../../../components/Header.astro';
+import Hero from '../../../components/Hero.astro';
+import siteConfig from '../../../data/site-config';
+import Subscribe from '../../../components/Market.astro';
+import { appwriteException, getRentalService, getRentalImageUrl, getName } from '../../../data/services';
+import ErrorMessage from '../../../components/ErrorMessage.astro';
+import { CustomError } from '../../../utils/custom_error';
+import { isBot, getAppStoreUrl } from '../../../utils/bot-detection';
 
 const { id } = Astro.params || '';
 
