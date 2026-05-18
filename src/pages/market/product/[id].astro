@@ -19,13 +19,6 @@ if (id === '') {
     return Astro.redirect('/');
 }
 
-// ─── Bot detection ────────────────────────────────────────────────────────────
-const userAgent = Astro.request.headers.get('user-agent') ?? '';
-if (!isBot(userAgent)) {
-    return Astro.redirect(getAppStoreUrl(userAgent), 302);
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
 let metaTitle = siteConfig.product?.title;
 let metaDescription = siteConfig.product?.text;
 let metaPreview = siteConfig.product?.preview;
@@ -53,12 +46,19 @@ try {
         metaPreview = siteConfig.product?.preview;
     }
 }
+
+// ─── Bot detection / visitor redirect ─────────────────────────────────────────
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+const appStoreUrl = getAppStoreUrl(userAgent);
+const shouldClientRedirect = !isBot(userAgent);
+// ─────────────────────────────────────────────────────────────────────────────
 ---
 
 <NoHeaderLayout title={metaTitle} description={metaDescription} image={metaPreview}>
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
+            {shouldClientRedirect && <script is:inline>{`window.location.replace(${JSON.stringify(appStoreUrl)});`}</script>}
             <!-- <main>
                 {
                     hasError ? (
