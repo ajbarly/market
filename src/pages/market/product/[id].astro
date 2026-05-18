@@ -1,17 +1,17 @@
 ---
+// src/pages/market/product/[id].astro
 import NoHeaderLayout from '../../../layouts/NoHeaderLayout.astro';
 import Header from '../../../components/Header.astro';
 import Hero from '../../../components/Hero.astro';
-
 import siteConfig from '../../../data/site-config';
-import Subscribe from '../../../components/Market.astro';
-import { appwriteException, getDocument } from '../../../data/services';
+import { appwriteException, getRow } from '../../../data/services';
 import ErrorMessage from '../../../components/ErrorMessage.astro';
 import { CustomError } from '../../../utils/custom_error';
 import Gallery from '../../../components/Gallery.astro';
 import OrderForm from '../../../components/OrderForm.astro';
 import ProductPost from '../../../components/ProductPost.astro';
 import { setProduct, type Product } from '../../../data/models';
+import { isBot, getAppStoreUrl } from '../../../utils/bot-detection';
 
 const { id } = Astro.params || '';
 
@@ -19,14 +19,22 @@ if (id === '') {
     return Astro.redirect('/');
 }
 
+// ─── Bot detection ────────────────────────────────────────────────────────────
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+if (!isBot(userAgent)) {
+    return Astro.redirect(getAppStoreUrl(userAgent), 302);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 let metaTitle = siteConfig.product?.title;
 let metaDescription = siteConfig.product?.text;
 let metaPreview = siteConfig.product?.preview;
 let productModel: Product;
 let hasError: boolean = false;
 let errorInstance: CustomError = new CustomError(0, '', '');
+
 try {
-    const result = await getDocument(false, id!);
+    const result = await getRow(false, id!);
     productModel = setProduct(result);
     metaTitle = productModel.name;
     metaDescription = productModel.details;
@@ -51,22 +59,21 @@ try {
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
-            <main>
-               {
-                 hasError ? (
-                <ErrorMessage code={errorInstance.code} title={errorInstance.title} text={errorInstance.text} />
-                ) : (
-                <ProductPost product={productModel} />
-                <div class="h-8"></div>
-                <Gallery images={productModel.images} />
-                )
-               }
-            </main>
+            <!-- <main>
+                {
+                    hasError ? (
+                        <ErrorMessage code={errorInstance.code} title={errorInstance.title} text={errorInstance.text} />
+                    ) : (
+                        <>
+                            <ProductPost product={productModel} />
+                            <div class="h-8" />
+                            <Gallery images={productModel.images} />
+                        </>
+                    )
+                }
+            </main> -->
             <Hero />
-            {
-                hasError || !productModel.orderable ? <div></div>:
-                <OrderForm product={productModel} />
-            }
+            <!-- {!hasError && productModel.orderable && <OrderForm product={productModel} />} -->
         </div>
         <section class="grow py-12 sm:py-16">
             <Subscribe class="px-4 my-12 sm:px-8 sm:my-16" />
