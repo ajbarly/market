@@ -3,7 +3,6 @@ import NoHeaderLayout from '../layouts/NoHeaderLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import siteConfig from '../data/site-config';
-import Market from '../components/Market.astro';
 ---
 
 <NoHeaderLayout description={siteConfig.description} image={siteConfig.image}>
@@ -12,8 +11,5 @@ import Market from '../components/Market.astro';
             <Header class="relative" />
             <Hero />
         </div>
-        <main class="grow py-12 sm:py-16">
-            <Market class="px-4 my-12 sm:px-8 sm:my-16" />
-        </main>
     </div>
 </NoHeaderLayout>
