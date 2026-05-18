@@ -1,74 +1,81 @@
 import type { Models } from "node-appwrite";
-import { getName, getProductImageUrl, getStoreImageUrl } from "./services";
+import { getStoreImageUrl, getRentalImageUrl, getStoreImageUrl } from "./services";
 
-// export interface Product {
-//     id: string,
-//     storeId: string,
-//     storeName: string,
-//     storeLogo: string,
-//     name: string;
-//     state: string;
-//     stock: string | null;
-//     refund: boolean | null;
-//     negotiable: boolean;
-//     deliverable: boolean | null;
-//     orderable: boolean;
-//     warranty: Warranty | null;
-//     details: string,
-//     price: number | null;
-//     discount: number;
-//     views: number;
-//     satisfied: number;
-//     unsatisfied: number;
-//     hasVideo: boolean;
-//     images: string[];
-//     thumbnail: string;
+export interface Store {
+    id: string,
+    name: string;
+    details: string,
+    cover: string;
 
-// }
+}
 
 export interface Product {
     id: string,
     name: string;
     details: string,
     hasVideo: boolean;
-    images: string[];
-    thumbnail: string;
+    image: string;
 
 }
 
-// interface Warranty {
-//     type: boolean;
-//     duration: number;
-//     unit: boolean;
-// }
+export interface RentalService {
+    id: string,
+    name: string;
+    details: string,
+    cover: string;
+
+}
+
+export interface ForRent {
+    id: string,
+    name: string;
+    details: string,
+    hasVideo: boolean;
+    image: string;
+
+}
 
 export function setProduct(result: Models.Row): Product {
     const hasVideo: boolean = result.has_video ?? false;
+    const image: string = hasVideo ? getStoreImageUrl(result.video_thumbnail) : (getStoreImageUrl(result.images[0]) ?? '');
     return {
         id: result.$id,
-        // storeId: result.store.$id,
-        // storeName: getName(result.store.store_name),
-        // storeLogo: getStoreImageUrl(result.store.store_avatar),
         name: result.name,
         details: result.details,
         hasVideo: hasVideo,
-        images: result.images.map((img: any) => getProductImageUrl(img)),
-        thumbnail: hasVideo ? getProductImageUrl(result.video_thumbnail) : '',
+        image: image,
     };
 }
 
-//     refund: result.refund ?? null,
-//     negotiable: result.product_negotiable,
-//     deliverable: result.product_deliverable ?? false,
-//     orderable: result.orderable ?? false,
-//     warranty: result.warranty ?? null,
-//     details: result.product_details,
-//     price: result.product_price ?? null,
-//     discount: result.product_dicount_price ?? null,
-//     views: result.views ?? 0,
-//     satisfied: result.satisfied ?? 0,
-//     unsatisfied: result.unsatisfied ?? 0,
-//     images: result.product_imgs.map((img: any) => getProductImageUrl(img)),
-//     hasVideo: result.has_video ?? false,
-//     thumbnail: getProductImageUrl(result.thumbnail),
-// };
+export function setForRent(result: Models.Row): ForRent {
+    const hasVideo: boolean = result.has_video ?? false;
+    const image: string = hasVideo ? getRentalImageUrl(result.video_thumbnail) : (getRentalImageUrl(result.images[0]) ?? '');
+    return {
+        id: result.$id,
+        name: result.name,
+        details: result.details,
+        hasVideo: hasVideo,
+        image: image,
+    };
+}
+
+export function setStore(result: Models.Row): Store {
+    const name: string = result.name_ar + ' - ' + result.name_en;
+    return {
+        id: result.$id,
+        name: name,
+        details: result.details,
+        cover: getStoreImageUrl(result.cover_id),
+    };
+}
+
+export function setRentalService(result: Models.Row): RentalService {
+    const name: string = result.name_ar + ' - ' + result.name_en;
+
+    return {
+        id: result.$id,
+        name: ßname,
+        details: result.details,
+        cover: getRentalImageUrl(result.cover_id),
+    };
+}

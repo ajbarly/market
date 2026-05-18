@@ -19,6 +19,13 @@ if (id === '') {
     return Astro.redirect('/');
 }
 
+// ─── Bot detection ────────────────────────────────────────────────────────────
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+if (!isBot(userAgent)) {
+    return Astro.redirect(getAppStoreUrl(userAgent), 302);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 let metaTitle = siteConfig.product?.title;
 let metaDescription = siteConfig.product?.text;
 let metaPreview = siteConfig.product?.preview;
@@ -31,7 +38,7 @@ try {
     productModel = setProduct(result);
     metaTitle = productModel.name;
     metaDescription = productModel.details;
-    metaPreview = { src: productModel.images[0] || '', alt: productModel.name };
+    metaPreview = { src: productModel.image || '', alt: productModel.name };
 
     if (metaPreview.src === '') {
         metaPreview.src = siteConfig.store?.avatar!;
@@ -46,13 +53,6 @@ try {
         metaPreview = siteConfig.product?.preview;
     }
 }
-
-// ─── Bot detection / visitor redirect ─────────────────────────────────────────
-const userAgent = Astro.request.headers.get('user-agent') ?? '';
-if (!isBot(userAgent)) {
-    return Astro.redirect(getAppStoreUrl(userAgent), 302);
-}
-// ─────────────────────────────────────────────────────────────────────────────
 ---
 
 <NoHeaderLayout title={metaTitle} description={metaDescription} image={metaPreview}>

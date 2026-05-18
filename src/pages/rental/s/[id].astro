@@ -5,10 +5,11 @@ import Header from '../../../components/Header.astro';
 import Hero from '../../../components/Hero.astro';
 import siteConfig from '../../../data/site-config';
 import Subscribe from '../../../components/Market.astro';
-import { appwriteException, getRentalService, getRentalImageUrl, getName } from '../../../data/services';
+import { appwriteException, getRentalService } from '../../../data/services';
 import ErrorMessage from '../../../components/ErrorMessage.astro';
 import { CustomError } from '../../../utils/custom_error';
 import { isBot, getAppStoreUrl } from '../../../utils/bot-detection';
+import { type RentalService, setRentalService } from '../../../data/models';
 
 const { id } = Astro.params || '';
 
@@ -16,26 +17,13 @@ if (id === '') {
     return Astro.redirect('/');
 }
 
-// ─── Bot detection ────────────────────────────────────────────────────────────
-const userAgent = Astro.request.headers.get('user-agent') ?? '';
-if (!isBot(userAgent)) {
-    return Astro.redirect(getAppStoreUrl(userAgent), 302);
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
 // Deep link that opens the rental service inside the app
 const appDeepLink = `intent://ajbarly.app/market/rental/s/${id}/#Intent;scheme=https;package=app.ajbarly;end`;
 
 let metaTitle = 'خدمة إيجار';
 let metaDescription = siteConfig.description;
 let metaImage: { src: string; alt?: string } | undefined = siteConfig.image;
-
-let serviceName = '';
-let serviceDescription = '';
-let servicePrice = '';
-let serviceImage = '';
-let serviceLocation = '';
-let serviceCategory = '';
+let rentalService: RentalService;
 
 let hasError = false;
 let errorInstance: CustomError = new CustomError(0, '', '');
@@ -44,17 +32,12 @@ try {
     const result = await getRentalService(id!);
 
     // ── Adapt these field names to match your actual Appwrite table columns ──
-    serviceName = result.name ?? '';
-    serviceDescription = result.description ?? '';
-    servicePrice = result.price ? `${result.price} MRU` : 'السعر عند التواصل';
-    serviceLocation = result.location ?? '';
-    serviceCategory = result.category ?? '';
-    serviceImage = result.image ? getRentalImageUrl(result.image) : (siteConfig.image?.src ?? '');
+    rentalService = setRentalService(result);
     // ─────────────────────────────────────────────────────────────────────────
 
-    metaTitle = serviceName || 'خدمة إيجار';
-    metaDescription = serviceDescription || siteConfig.description;
-    metaImage = { src: serviceImage, alt: serviceName };
+    metaTitle = rentalService.name || 'خدمة إيجار';
+    metaDescription = rentalService.details || siteConfig.description;
+    metaImage = { src: rentalService.cover, alt: rentalService.name };
 } catch (error: any) {
     hasError = true;
     if (error instanceof appwriteException) {
@@ -64,6 +47,13 @@ try {
                 : new CustomError(505, siteConfig.error?.title!, siteConfig.error?.text!);
     }
 }
+
+// ─── Bot detection ────────────────────────────────────────────────────────────
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+if (!isBot(userAgent)) {
+    return Astro.redirect(getAppStoreUrl(userAgent), 302);
+}
+// ─────────────────────────────────────────────────────────────────────────────
 ---
 
 <NoHeaderLayout title={metaTitle} description={metaDescription} image={metaImage}>
@@ -71,21 +61,21 @@ try {
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
 
-            <main class="py-10 px-4 sm:px-8">
+            <!-- <main class="py-10 px-4 sm:px-8">
                 {
                     hasError ? (
                         <ErrorMessage code={errorInstance.code} title={errorInstance.title} text={errorInstance.text} />
                     ) : (
                         <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-                            {serviceImage && (
-                                <img src={serviceImage} alt={serviceName} class="w-full h-64 object-cover" onerror="this.src='/broken_product.jpg'" />
+                            {rentalService.cover && (
+                                <img src={rentalService.cover} alt={rentalService.name} class="w-full h-64 object-cover" onerror="this.src='/broken_product.jpg'" />
                             )}
 
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="inline-block bg-yellow-500 text-white text-xs font-semibold px-3 py-1 rounded-full">خدمة إيجار</span>
-                                    {serviceCategory && (
-                                        <span class="inline-block bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">{serviceCategory}</span>
+                                    {rentalService.details && (
+                                        <span class="inline-block bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">{rentalService.details}</span>
                                     )}
                                 </div>
 
@@ -107,7 +97,7 @@ try {
                         </div>
                     )
                 }
-            </main>
+            </main> -->
 
             <Hero />
         </div>

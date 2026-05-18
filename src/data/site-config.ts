@@ -24,6 +24,8 @@ export type Market = {
 };
 
 export type Store = {
+    details: string | undefined;
+    name: string | undefined;
     title?: string;
     text?: string;
     cover?: Image;

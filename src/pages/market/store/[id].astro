@@ -1,21 +1,56 @@
 ---
+function setStore(result: Models.Row): Store {
+    throw new Error('Function not implemented.');
+}
+
 // src/pages/market/store/[id].astro
 import NoHeaderLayout from '../../../layouts/NoHeaderLayout.astro';
 import Header from '../../../components/Header.astro';
 import Hero from '../../../components/Hero.astro';
-import siteConfig from '../../../data/site-config';
+import siteConfig, { type Store } from '../../../data/site-config';
 import Subscribe from '../../../components/Market.astro';
-import { appwriteException, getRow, getName, getStoreImageUrl } from '../../../data/services';
+import { appwriteException, getRow, getStoreImageUrl } from '../../../data/services';
 import { isOpen } from '../../../utils/store_available';
 import { getCategoryName } from '../../../utils/store_category';
 import ErrorMessage from '../../../components/ErrorMessage.astro';
 import { CustomError } from '../../../utils/custom_error';
 import { isBot, getAppStoreUrl } from '../../../utils/bot-detection';
+import type { Models } from 'node-appwrite';
 
 const { id } = Astro.params || '';
 
 if (id === '') {
     return Astro.redirect('/');
+}
+
+let metaTitle = siteConfig.store?.title;
+let store: Store;
+let about = siteConfig.store?.text;
+let cover = siteConfig.store?.cover;
+// const redirectUrl = 'intent://ajbarly.app/market/store/' + id + '/#Intent;scheme=https;package=app.ajbarly;end';
+let hasError: boolean = false;
+let errorInstance: CustomError = new CustomError(0, '', '');
+
+try {
+    const result = await getRow(true, id!);
+    store = setStore(result);
+
+    about = store.details;
+    cover = { src: store.cover, alt: store.name };
+    metaTitle = store.name;
+
+    if (cover.src === '') {
+        cover.src = siteConfig.market?.coverUrl!;
+    }
+} catch (error: any) {
+    hasError = true;
+    if (error instanceof appwriteException) {
+        if (error.code !== 404) {
+            errorInstance = new CustomError(505, siteConfig.error?.title!, siteConfig.error?.text!);
+        }
+        errorInstance = new CustomError(404, metaTitle!, about!);
+        cover = siteConfig.store?.cover;
+    }
 }
 
 // ─── Bot detection ────────────────────────────────────────────────────────────
@@ -28,54 +63,13 @@ if (!isBot(userAgent)) {
     return Astro.redirect(getAppStoreUrl(userAgent), 302);
 }
 // ─────────────────────────────────────────────────────────────────────────────
-
-let metaTitle = siteConfig.store?.title;
-let storeName = '',
-    categoryName = '';
-let aboutStore = siteConfig.store?.text;
-let storeCover = siteConfig.store?.cover;
-let storeAvatar = '';
-let counter = '';
-let availability = '';
-const redirectUrl = 'intent://ajbarly.app/market/store/' + id + '/#Intent;scheme=https;package=app.ajbarly;end';
-let hasError: boolean = false;
-let errorInstance: CustomError = new CustomError(0, '', '');
-
-try {
-    const result = await getRow(true, id!);
-
-    storeName = getName(`${result.store_name}`);
-    categoryName = getCategoryName(result.store_type);
-    aboutStore = result.store_about;
-    storeAvatar = getStoreImageUrl(result.store_avatar);
-    availability = isOpen(result.store_opens, result.store_closes);
-    storeCover = { src: result.store_cover || '', alt: storeName };
-
-    metaTitle = storeName;
-    counter = result.store_product_counter;
-    if (storeCover.src !== '') {
-        storeCover.src = getStoreImageUrl(storeCover.src);
-    } else {
-        storeCover.src = siteConfig.market?.coverUrl!;
-    }
-} catch (error: any) {
-    hasError = true;
-    if (error instanceof appwriteException) {
-        if (error.code !== 404) {
-            errorInstance = new CustomError(505, siteConfig.error?.title!, siteConfig.error?.text!);
-        }
-        errorInstance = new CustomError(404, metaTitle!, aboutStore!);
-        storeCover = siteConfig.store?.cover;
-        counter = error.message + ' ' + error.code;
-    }
-}
 ---
 
-<NoHeaderLayout title={metaTitle} description={aboutStore} image={storeCover}>
+<NoHeaderLayout title={metaTitle} description={about} image={cover}>
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
-            <Hero>
+            <!-- <Hero>
                 {
                     hasError ? (
                         <ErrorMessage code={errorInstance.code} title={errorInstance.title} text={errorInstance.text} />
@@ -83,7 +77,7 @@ try {
                         <div class="mt-7 flex flex-wrap items-center justify-center">
                             <div class="container lg:w-2/6 xl:w-2/7 sm:w-full md:w-2/3 bg-white transform duration-200 easy-in-out">
                                 <div class="h-52 overflow-hidden">
-                                    <img class="w-full" src={storeCover?.src} alt={storeCover?.alt} onerror="this.src='/broken_store.jpg'" />
+                                    <img class="w-full" src={cover?.src} alt={cover?.alt} onerror="this.src='/broken_store.jpg'" />
                                 </div>
                                 <div class="flex justify-center px-5 -mt-12">
                                     <img
@@ -135,7 +129,7 @@ try {
                         </div>
                     )
                 }
-            </Hero>
+            </Hero> -->
         </div>
         <main class="grow py-12 sm:py-16">
             <Subscribe class="px-4 my-12 sm:px-8 sm:my-16" />
