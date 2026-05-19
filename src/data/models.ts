@@ -64,7 +64,7 @@ export function setStore(result: Models.Row): Store {
     return {
         id: result.$id,
         name: name,
-        details: result.details,
+        details: result.about,
         cover: getStoreImageUrl(result.cover_id),
     };
 }
@@ -75,7 +75,7 @@ export function setRentalService(result: Models.Row): RentalService {
     return {
         id: result.$id,
         name: name,
-        details: result.details,
+        details: result.about,
         cover: getRentalImageUrl(result.cover_id),
     };
 }
