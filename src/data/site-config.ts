@@ -64,7 +64,7 @@ const siteConfig: SiteConfig = {
         src: '/logo.png',
         alt: 'Ajbarly web logo'
     },
-    title: 'أجبرلي ويب',
+    title: 'Ajbarly',
     description: 'اكتشف عالمًا جديدًا من الفرص التجارية مع تطبيق \"أجبرلي\"، حيث يتقاطع الابتكار مع احتياجاتك. هنا، تتاح لك مساحة غير محدودة للتواصل مع جمهورك المستهدف...',
     image: {
         src: '/market_preview.jpg',
