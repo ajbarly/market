@@ -110,6 +110,8 @@ const siteConfig: SiteConfig = {
     },
 
     store: {
+        details: undefined,
+        name: undefined,
         title: 'المتجر غير متاح',
         text: 'عذرًا، يبدو أن المتجر الذي تحاول الوصول إليه غير موجود أو تم حذفه. يرجى العودة إلى التطبيق والبحث عن ما تريده هناك.',
         cover: {
