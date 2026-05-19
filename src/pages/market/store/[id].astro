@@ -55,11 +55,11 @@ try {
 // so they can read the OG meta tags and render a rich preview card.
 // Real users who click the link (and don't have the app) are sent straight
 // to the appropriate app store.
-// const userAgent = Astro.request.headers.get('user-agent') ?? '';
-// if (!isBot(userAgent)) {
-//     return Astro.redirect(getAppStoreUrl(userAgent), 302);
-// }
-// ─────────────────────────────────────────────────────────────────────────────
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+if (!isBot(userAgent)) {
+    return Astro.redirect(getAppStoreUrl(userAgent), 302);
+}
+// ──────────────────────────────────────────────────────────────
 ---
 
 <NoHeaderLayout title={metaTitle} description={about} image={cover}>
