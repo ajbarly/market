@@ -1,4 +1,4 @@
-import { Client, TablesDB, Storage, AppwriteException, type Models, ID } from 'node-appwrite';
+import { Client, TablesDB, Storage, AppwriteException, type Models, ID, Query } from 'node-appwrite';
 
 export const client = new Client();
 const tablesDB = new TablesDB(client);
@@ -14,12 +14,18 @@ const productCollectionId: string = '636275b09a7821f7f491';
 const rentalPostTableId: string = '636e31f73e0b31321782';      // /market/rental/p/[id]
 const rentalServiceTableId: string = '65d10bbc3a58a59669f5'; // /market/rental/s/[id]
 // ─────────────────────────────────────────────────────────────────────────────
+const profileQuery = Query.select(["name_ar", "name_en", "about", "cover_id"]);
+const postQuery = Query.select(["name", "details", "has_video", "video_thumbnail", "images"]);
 
 client
     .setEndpoint(CDN).setProject(PROJECT);
 
 export async function getRow(isStore: boolean, id: string): Promise<Models.Row> {
-    return await tablesDB.getRow(databaseId, isStore ? storeCollectionId : productCollectionId, id);
+    return await tablesDB.getRow(databaseId, isStore ? storeCollectionId : productCollectionId, id,
+
+
+        isStore ? [profileQuery] : [postQuery]
+    );
 }
 
 // ─── Rental ──────────────────────────────────────────────────────────────────
@@ -29,7 +35,7 @@ export async function getRow(isStore: boolean, id: string): Promise<Models.Row> 
  * Route: /market/rental/p/[id]
  */
 export async function getRentalPost(id: string): Promise<Models.Row> {
-    return await tablesDB.getRow(databaseId, rentalPostTableId, id);
+    return await tablesDB.getRow(databaseId, rentalPostTableId, id, [postQuery]);
 }
 
 /**
@@ -37,7 +43,7 @@ export async function getRentalPost(id: string): Promise<Models.Row> {
  * Route: /market/rental/s/[id]
  */
 export async function getRentalService(id: string): Promise<Models.Row> {
-    return await tablesDB.getRow(databaseId, rentalServiceTableId, id);
+    return await tablesDB.getRow(databaseId, rentalServiceTableId, id, [profileQuery]);
 }
 
 // ─── Image helpers ────────────────────────────────────────────────────────────
