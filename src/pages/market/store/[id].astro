@@ -1,15 +1,12 @@
 ---
-function setStore(result: Models.Row): Store {
-    throw new Error('Function not implemented.');
-}
-
 // src/pages/market/store/[id].astro
 import NoHeaderLayout from '../../../layouts/NoHeaderLayout.astro';
 import Header from '../../../components/Header.astro';
 import Hero from '../../../components/Hero.astro';
-import siteConfig, { type Store } from '../../../data/site-config';
+import siteConfig, { type Image } from '../../../data/site-config';
 import Subscribe from '../../../components/Market.astro';
-import { appwriteException, getRow, getStoreImageUrl } from '../../../data/services';
+import { appwriteException, getRow } from '../../../data/services';
+import { setStore, type Store as ModelStore } from '../../../data/models';
 import { isOpen } from '../../../utils/store_available';
 import { getCategoryName } from '../../../utils/store_category';
 import ErrorMessage from '../../../components/ErrorMessage.astro';
@@ -24,9 +21,9 @@ if (id === '') {
 }
 
 let metaTitle = siteConfig.store?.title;
-let store: Store;
+let store: ModelStore;
 let about = siteConfig.store?.text;
-let cover = siteConfig.store?.cover;
+let cover: Image = siteConfig.store?.cover ?? { src: '', alt: '' };
 // const redirectUrl = 'intent://ajbarly.app/market/store/' + id + '/#Intent;scheme=https;package=app.ajbarly;end';
 let hasError: boolean = false;
 let errorInstance: CustomError = new CustomError(0, '', '');
@@ -58,10 +55,10 @@ try {
 // so they can read the OG meta tags and render a rich preview card.
 // Real users who click the link (and don't have the app) are sent straight
 // to the appropriate app store.
-const userAgent = Astro.request.headers.get('user-agent') ?? '';
-if (!isBot(userAgent)) {
-    return Astro.redirect(getAppStoreUrl(userAgent), 302);
-}
+// const userAgent = Astro.request.headers.get('user-agent') ?? '';
+// if (!isBot(userAgent)) {
+//     return Astro.redirect(getAppStoreUrl(userAgent), 302);
+// }
 // ─────────────────────────────────────────────────────────────────────────────
 ---
 
