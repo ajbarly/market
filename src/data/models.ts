@@ -1,5 +1,5 @@
 import type { Models } from "node-appwrite";
-import { getStoreImageUrl, getRentalImageUrl, getStoreImageUrl } from "./services";
+import { getStoreImageUrl, getRentalImageUrl } from "./services";
 
 export interface Store {
     id: string,
@@ -74,7 +74,7 @@ export function setRentalService(result: Models.Row): RentalService {
 
     return {
         id: result.$id,
-        name: ßname,
+        name: name,
         details: result.details,
         cover: getRentalImageUrl(result.cover_id),
     };
