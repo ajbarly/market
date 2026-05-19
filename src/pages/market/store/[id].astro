@@ -46,7 +46,7 @@ try {
             errorInstance = new CustomError(505, siteConfig.error?.title!, siteConfig.error?.text!);
         }
         errorInstance = new CustomError(404, metaTitle!, about!);
-        cover = siteConfig.store?.cover;
+        cover = siteConfig.store?.cover!;
     }
 }
 
