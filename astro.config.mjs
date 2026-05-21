@@ -4,7 +4,7 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://market.ajbarly.app',
+  site: 'https://ajbarly.app',
 
   integrations: [
       sitemap()
