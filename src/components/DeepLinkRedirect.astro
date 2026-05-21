@@ -1,0 +1,123 @@
+---
+interface Props {
+    deepLinkPath: string;
+}
+const { deepLinkPath } = Astro.props;
+
+import { buildAndroidIntentUrl, buildPlayStoreUrl, buildAppStoreUrl } from '../utils/deep-link';
+
+const intentUrl = buildAndroidIntentUrl(deepLinkPath);
+const playStoreUrl = buildPlayStoreUrl(deepLinkPath);
+const appStoreUrl = buildAppStoreUrl();
+// iOS custom scheme: your app must register this in Info.plist
+const iosSchemeUrl = `ajbarly://${deepLinkPath.replace(/^\//, '')}`;
+---
+
+<!-- Shown while JS determines what to do -->
+<div id="dl-overlay" style="position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:Tajawal,sans-serif;direction:rtl;">
+    <img src="/logo.png" alt="Ajbarly" style="width:80px;height:80px;border-radius:20px;" />
+    <p style="font-size:18px;color:#333;margin:0;">جارٍ فتح التطبيق...</p>
+    <div id="dl-fallback" style="display:none;flex-direction:column;align-items:center;gap:12px;">
+        <p style="font-size:14px;color:#666;margin:0;">لم يتم العثور على التطبيق</p>
+        <a id="dl-store-btn"
+           style="background:#4C00E6;color:#fff;padding:12px 28px;border-radius:100px;text-decoration:none;font-size:15px;font-weight:600;">
+            تحميل التطبيق
+        </a>
+    </div>
+    <div id="dl-inapp-banner" style="display:none;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:0 24px;">
+        <p style="font-size:14px;color:#666;margin:0;">
+            يُرجى فتح هذا الرابط في متصفح Chrome أو Safari للوصول إلى التطبيق
+        </p>
+        <button id="dl-copy-btn"
+            style="background:#4C00E6;color:#fff;padding:12px 28px;border-radius:100px;border:none;font-size:15px;font-weight:600;cursor:pointer;">
+            نسخ الرابط
+        </button>
+    </div>
+</div>
+
+<script is:inline define:vars={{ intentUrl, playStoreUrl, appStoreUrl, iosSchemeUrl, deepLinkPath }}>
+(function () {
+    const ua = navigator.userAgent.toLowerCase();
+
+    const isAndroid = /android/.test(ua);
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+
+    // Detect embedded WebViews that block Intent URLs
+    const isFacebook   = /fban|fbav/.test(ua);
+    const isMessenger  = /messenger/.test(ua);
+    const isInstagram  = /instagram/.test(ua);
+    const isSnapchat   = /snapchat/.test(ua);
+    const isInAppBrowser = isFacebook || isMessenger || isInstagram || isSnapchat;
+
+    var overlay   = document.getElementById('dl-overlay');
+    var fallback  = document.getElementById('dl-fallback');
+    var storeBtn  = document.getElementById('dl-store-btn');
+    var inappBanner = document.getElementById('dl-inapp-banner');
+    var copyBtn   = document.getElementById('dl-copy-btn');
+
+    // Hide overlay after redirect (app opened or store opened)
+    function hideOverlay() {
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    // Show fallback download button
+    function showFallback(storeUrl) {
+        if (storeBtn) storeBtn.href = storeUrl;
+        if (fallback) fallback.style.display = 'flex';
+    }
+
+    // Copy current URL to clipboard
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            navigator.clipboard.writeText(window.location.href).then(function () {
+                copyBtn.textContent = 'تم النسخ ✓';
+            });
+        });
+    }
+
+    if (isAndroid) {
+        if (isInAppBrowser) {
+            // Intent URLs are blocked in FB/Messenger WebViews.
+            // Show prompt to open in Chrome instead.
+            if (inappBanner) inappBanner.style.display = 'flex';
+            if (fallback) fallback.style.display = 'flex';
+            showFallback(playStoreUrl);
+        } else {
+            // Chrome or other Android browser.
+            // If App Links are verified → Chrome opens app directly without loading this page.
+            // If we're here, app is NOT installed or App Links aren't verified yet.
+            // Intent URL: tries app → falls back to Play Store with referrer.
+            window.location.href = intentUrl;
+
+            // Show fallback UI after delay (in case intent URL didn't redirect)
+            setTimeout(function () {
+                showFallback(playStoreUrl);
+            }, 2500);
+        }
+    } else if (isIOS) {
+        if (isInAppBrowser) {
+            if (inappBanner) inappBanner.style.display = 'flex';
+            showFallback(appStoreUrl);
+        } else {
+            // Try custom URL scheme first
+            window.location.href = iosSchemeUrl;
+
+            // If scheme didn't open app, redirect to App Store after delay
+            var iosTimer = setTimeout(function () {
+                showFallback(appStoreUrl);
+            }, 1500);
+
+            // If page hides (app opened), cancel the timer
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    clearTimeout(iosTimer);
+                    hideOverlay();
+                }
+            });
+        }
+    } else {
+        // Desktop — just hide overlay and show normal page
+        hideOverlay();
+    }
+})();
+</script>
