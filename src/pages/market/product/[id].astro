@@ -18,11 +18,11 @@ if (id === '') {
     return Astro.redirect('/');
 }
 
-// ─── Bot detection ────────────────────────────────────────────────────────────
+// ─── Bot detection (keep for OG meta only — no redirect for users) ───────────
+import DeepLinkRedirect from '../../../components/DeepLinkRedirect.astro';
 const userAgent = Astro.request.headers.get('user-agent') ?? '';
-if (!isBot(userAgent)) {
-    return Astro.redirect(getAppStoreUrl(userAgent), 302);
-}
+const isCrawler = isBot(userAgent);
+const deepLinkPath = `/market/product/${id}`;
 // ─────────────────────────────────────────────────────────────────────────────
 
 let metaTitle = siteConfig.product?.title;
@@ -55,6 +55,7 @@ try {
 ---
 
 <NoHeaderLayout title={metaTitle} description={metaDescription} image={metaPreview}>
+    {!isCrawler && <DeepLinkRedirect deepLinkPath={deepLinkPath} />}
     <div class="relative bg-slate-50 border-b border-slate-100">
         <div class="relative isolate overflow-hidden bg-slate-100">
             <Header class="relative" />
